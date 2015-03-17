@@ -3,61 +3,32 @@
 
 .include "macros.s"
 
-.import Multi_8_8
+.import Plot, WriteHLine, Write, chartowrite
 
 .data
 
-CURRENT_COLOR:        .byte   0
-KEY_VALUE:            .byte   0
-lengthcounter:        .byte   $00
-ylocation:            .byte   $00
-chartowrite:          .byte   $00
-result:               .word   $00
+CURRENT_COLOR:        .byte   $00
+KEY_VALUE:            .byte   $00
+result:               .word   $0000
 
 .code
-    lda   #255
-    ldy   #255
-    jsr   Multi_8_8
-    sta   result
-    sty   result + 1
+    ldx   #$00
+    ldy   #$00
+    jsr   Plot
+
+    GETTEXTCOLOR CURRENT_COLOR
+    SETTEXTCOLORIM LIGHTRED
+
+    SETCHARTOWRITE $4f
+    jsr   Write
+
+    SETCHARTOWRITE $77
+    ldx   #$26
+    jsr   WriteHLine
+
+    SETCHARTOWRITE $50
+    jsr   Write
+
+    SETTEXTCOLORADDR CURRENT_COLOR
+
     rts
-
-;----------------------------------
-; WriteXY
-;
-; Writes to give screen coordinate
-; using screen memory
-;
-; Input:
-;   X = x coordinate
-;   Y = y coordinate
-;   chartowrite = character to output
-;
-; Output:
-;   none
-;----------------------------------
-
-;.proc    WriteXY
-;    lda   #$00
-;    ldy   #$28        ; width of line
-;    Multi_8_8
-;
-;    clc
-;    adc #xloc
-;    bcc storeresults
-;    iny
-;
-;storeresults:
-;    sta videoxy
-;    tya
-;    clc
-;    adc #$04
-;    sta videoxy+1
-;
-;    ldy #$00
-;    lda #char
-;    sta (videoxy),y
-;
-;done:
-;    rts
-;.endproc

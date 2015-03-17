@@ -16,30 +16,37 @@
 ;----------------------------------
 .proc    Multi_8_8
     .data
-      num1:     .byte   $00
-      num2:     .byte   $00
+      multiplier:   .byte   $00
+      multiplicand: .byte   $00
+      product:      .word   $00
 
     .code
     ; save params
-    sty   num2
-    ldx   num2
-    sta   num1
+    sty   multiplier
+    sta   multiplicand
 
     ; initial setup and check for 0's
     lda   #$00
-    tay
+    sta   product
+    ldx   #$08
 
-loop:
+shift:
+    asl   a
+    rol   product + 1
+    asl   multiplier
+    bcc   chcnt
     clc
-    adc   num1
-    bcc   countdown
-    iny
+    adc   multiplicand
+    bcc   chcnt
+    inc   product + 1
 
-countdown:
+chcnt:
     dex
-    beq   done
-    jmp   loop
+    bne   shift
+    sta   product
 
 done:
+    lda   product
+    ldy   product + 1
     rts
 .endproc

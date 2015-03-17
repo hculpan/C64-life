@@ -23,6 +23,11 @@
 
 .code
 
+.macro    SETCHARTOWRITE char
+    lda   #char
+    sta   chartowrite
+.endmacro
+
 .macro    GETTEXTCOLOR addr
     lda   $0286
     sta   addr
