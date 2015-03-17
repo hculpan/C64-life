@@ -11,8 +11,10 @@ CO=$(CC65BASE)/bin/co65
 
 CURRDIR=$(shell pwd)
 
-c64life: c64life.o
-	$(LD) -o c64life -t $(TARGET_PLATFORM) c64life.o $(TARGET_PLATFORM).lib
+all: mkdisk
+
+c64life: c64life.o math.o
+	$(LD) -o c64life -t $(TARGET_PLATFORM) c64life.o math.o $(TARGET_PLATFORM).lib
 
 #tribal.o: tribal.c
 #	$(CC) -O -t $(TARGET_PLATFORM) tribal.c
@@ -20,6 +22,9 @@ c64life: c64life.o
 
 c64life.o: c64life.s
 	$(CA) -t $(TARGET_PLATFORM) c64life.s
+
+math.o: math.s
+		$(CA) -t $(TARGET_PLATFORM) math.s
 
 clean:
 	rm -f *.o

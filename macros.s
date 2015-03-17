@@ -19,6 +19,8 @@
 .define   LIGHTBLUE   14
 .define   LIGHTGRAY   15
 
+.define   VIDEO_MEMORY    $0400
+
 .code
 
 .macro    GETTEXTCOLOR addr
