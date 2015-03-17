@@ -13,8 +13,8 @@ CURRDIR=$(shell pwd)
 
 all: mkdisk
 
-c64life: c64life.o math.o
-	$(LD) -o c64life -t $(TARGET_PLATFORM) c64life.o math.o $(TARGET_PLATFORM).lib
+c64life: c64life.o math.o screen.o
+	$(LD) -o c64life -t $(TARGET_PLATFORM) c64life.o math.o screen.o $(TARGET_PLATFORM).lib
 
 #tribal.o: tribal.c
 #	$(CC) -O -t $(TARGET_PLATFORM) tribal.c
@@ -25,6 +25,9 @@ c64life.o: c64life.s
 
 math.o: math.s
 		$(CA) -t $(TARGET_PLATFORM) math.s
+
+screen.o: screen.s
+		$(CA) -t $(TARGET_PLATFORM) screen.s
 
 clean:
 	rm -f *.o
