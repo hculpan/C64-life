@@ -28,6 +28,11 @@
     sta   chartowrite
 .endmacro
 
+.macro    SETCOLORTOWRITE color
+    lda   #color
+    sta   colortowrite
+.endmacro
+
 .macro    GETTEXTCOLOR addr
     lda   $0286
     sta   addr

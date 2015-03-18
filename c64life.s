@@ -3,7 +3,7 @@
 
 .include "macros.s"
 
-.import Plot, WriteHLine, Write, chartowrite
+.import Plot, WriteHLine, Write, chartowrite, colortowrite
 
 .data
 
@@ -12,6 +12,8 @@ KEY_VALUE:            .byte   $00
 result:               .word   $0000
 
 .code
+    SETCOLORTOWRITE LIGHTRED
+
     ldx   #$00
     ldy   #$00
     jsr   Plot

@@ -2,13 +2,15 @@
 
 .include "macros.s"
 
-.export Plot, WriteXY, chartowrite, Write, WriteHLine
+.export Plot, WriteXY, chartowrite, Write, WriteHLine, colortowrite
 
 .import Multi_8_8
 
 .zeropage
   chartowrite:    .byte   $00
+  colortowrite:   .byte   $00
   videoxy:        .word   $0000
+  colormemory:    .word   $0000
 
 .code
 
@@ -21,15 +23,27 @@
 ;
 ; Input:
 ;   chartowrite
+;   colortowrite
 ;
 ; Output:
 ;   none
 ;----------------------------------
 .proc   Write
-    lda chartowrite
+    lda colortowrite
     ldy #$00
+    sta (colormemory),y
+    inc colormemory
+    bcc videowrite
+    inc colormemory + 1
+
+videowrite:
+    lda chartowrite
     sta (videoxy),y
     inc videoxy
+    bcc done
+    inc videoxy + 1
+
+done:
     rts
 .endproc
 
@@ -43,18 +57,14 @@
 ; Input:
 ;   X = length
 ;   chartowrite
+;   colortowrite
 ;
 ; Output:
 ;   none
 ;----------------------------------
 .proc   WriteHLine
-    lda chartowrite
-    ldy #$00
 loop:
-    sta (videoxy),y
-    inc videoxy
-    bcc countdown
-    inc videoxy + 1
+    jsr Write
 
 countdown:
     dex
@@ -95,10 +105,15 @@ countdown:
 
 storeresults:
     sta videoxy
+    sta colormemory
     tya
     clc
     adc #$04
     sta videoxy+1
+    tya
+    clc
+    adc #$D8
+    sta colormemory+1
 
 done:
     rts
